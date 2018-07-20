@@ -51,12 +51,16 @@ defmodule Bootform.Errors do
   """
   def get_error(form, field) do
     case has_error?(form, field) do
-      true -> 
+      true ->
         msg = form.errors[field] |> elem(0)
         opts = form.errors[field] |> elem(1)
-        Enum.reduce(opts, msg, fn {key, value}, _acc ->
-         String.replace(msg, "%{#{key}}", to_string(value))
-        end)
+        gettext_backend = Application.get_env(:bootform, :gettext_backend)
+
+        if count = opts[:count] do
+          Gettext.dngettext(gettext_backend, "errors", msg, msg, count, opts)
+        else
+          Gettext.dgettext(gettext_backend, "errors", msg, opts)
+        end
       _ -> nil
     end
   end
