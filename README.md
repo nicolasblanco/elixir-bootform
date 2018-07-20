@@ -15,7 +15,13 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
-  2. Enjoy Bootform
+  2. Configure the Gettext backend module in your `config.exs` file in order for Bootform to correctly translate the error messages.
+
+    ```elixir
+      config :bootform, gettext_backend: MyAppWeb.Gettext
+    ```
+
+  3. Enjoy Bootform
 
     ```elixir
       <%= form_for @comment, post_path(@conn, :index), fn f -> %>
