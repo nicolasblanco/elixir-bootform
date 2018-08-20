@@ -119,7 +119,23 @@ defmodule Bootform do
     Tag.content_tag :div, class: @wrapper_class do
       Tag.content_tag :button, label, type: "submit", class: "btn btn-primary"
     end
+  end
 
+  @doc """
+  Render a form group
+  """
+  def form_group(form, field, do: block) do
+    Tag.content_tag :div, class: form_group_class(form, field) do
+      block
+    end
+  end
+
+  defp form_group_class(form, field) do
+    if Errors.has_error?(form, field) do
+      @wrapper_class <> " " <> @error_class
+    else
+      @wrapper_class
+    end
   end
 
   defp wrap(form, field, label, opts, do: block) do
