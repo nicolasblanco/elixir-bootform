@@ -32,7 +32,6 @@ defmodule Bootform.Mixfile do
     [
       {:phoenix_html, "~> 2.7"},
       {:phoenix, "~> 1.2"},
-      {:ecto, "~> 2.0"},
 
       # Docs
       {:ex_doc, "~> 0.12", only: :dev},
