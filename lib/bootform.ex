@@ -23,7 +23,7 @@ defmodule Bootform do
   @wrapper_checkbox_class "form-check"
   @error_class "has-danger"
   @input_class "form-control"
-  @input_error_class "form-control-danger"
+  @input_error_class "is-invalid"
   @label_class "form-control-label"
 
   @doc """
@@ -143,7 +143,7 @@ defmodule Bootform do
     {opts, help} = if Errors.has_error?(form, field) do
       {
         opts ++ [class: @wrapper_class <> " " <> @error_class],
-        Tag.content_tag(:div, Errors.get_error(form, field), class: "form-control-feedback")
+        Tag.content_tag(:small, Errors.get_error(form, field), class: "invalid-feedback")
       }
     else
       {
