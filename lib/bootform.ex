@@ -63,6 +63,7 @@ defmodule Bootform do
         :password -> Form.password_input(form, field, opts)
         :textarea -> Form.textarea(form, field, opts)
         :select -> Form.select(form, field, options, opts)
+        :number -> Form.number_input(form, field, opts)
         _ -> Form.text_input(form, field, opts)
       end
 
