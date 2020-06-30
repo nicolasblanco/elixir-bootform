@@ -24,7 +24,6 @@ defmodule Bootform do
   @error_class "has-danger"
   @input_class "form-control"
   @input_error_class "is-invalid"
-  @label_class "form-control-label"
 
   @doc """
   Render text input using bootstrap tags
@@ -43,21 +42,32 @@ defmodule Bootform do
   input form, :email
   ```
   """
-  @spec input(Phoenix.HTML.Form.t, Atom.t, String.t, List.t) :: {:safe, String.t}
+  @spec input(Phoenix.HTML.Form.t(), Atom.t(), String.t(), List.t()) :: {:safe, String.t()}
   def input(form, field, label, opts) do
     id = AttributeHelper.id(form, field)
     options = Keyword.get(opts, :options)
+
     wrap(form, field, label, []) do
-      type = if options do :select else Keyword.get(opts, :type) end
-      input_class = if Errors.has_error?(form, field) do
-        @input_class <> " " <> @input_error_class
-      else
-        @input_class
-      end
-      opts = Keyword.delete(opts, :type)
+      type =
+        if options do
+          :select
+        else
+          Keyword.get(opts, :type)
+        end
+
+      input_class =
+        if Errors.has_error?(form, field) do
+          @input_class <> " " <> @input_error_class
+        else
+          @input_class
+        end
+
+      opts =
+        Keyword.delete(opts, :type)
         |> Keyword.delete(:options)
         |> Keyword.put_new(:id, id)
         |> Keyword.put_new(:class, input_class)
+
       case type do
         :email -> Form.email_input(form, field, opts)
         :password -> Form.password_input(form, field, opts)
@@ -66,7 +76,6 @@ defmodule Bootform do
         :number -> Form.number_input(form, field, opts)
         _ -> Form.text_input(form, field, opts)
       end
-
     end
   end
 
@@ -85,7 +94,7 @@ defmodule Bootform do
   @doc """
   Render textarea input using bootstrap tags
   """
-  @spec textarea(Phoenix.HTML.Form.t, Atom.t, String.t, List.t) :: {:safe, String.t}
+  @spec textarea(Phoenix.HTML.Form.t(), Atom.t(), String.t(), List.t()) :: {:safe, String.t()}
   def textarea(form, field, label \\ false, opts \\ []) do
     input(form, field, label, [type: :textarea] ++ opts)
   end
@@ -93,19 +102,26 @@ defmodule Bootform do
   @doc """
   Render a checkbox with label
   """
-  @spec checkbox(Phoenix.HTML.Form.t, Atom.t, String.t, List.t) :: {:safe, String.t}
+  @spec checkbox(Phoenix.HTML.Form.t(), Atom.t(), String.t(), List.t()) :: {:safe, String.t()}
   def checkbox(form, field, label \\ false, opts \\ []) do
-    class = case Errors.has_error?(form, field) do
-      true -> @wrapper_checkbox_class <> " " <> @error_class
-      _ -> @wrapper_checkbox_class
-    end
-    Tag.content_tag(:div, class: class) do
-      Tag.content_tag(:label, class: "form-check-label") do
+    class =
+      case Errors.has_error?(form, field) do
+        true -> @wrapper_checkbox_class <> " " <> @error_class
+        _ -> @wrapper_checkbox_class
+      end
+
+    Tag.content_tag :div, class: class do
+      Tag.content_tag :label, class: "form-check-label" do
         [
-          Form.checkbox(form, field, opts ++ [
-            class: "form-check-input",
-            id: AttributeHelper.id(form, field)
-          ]),
+          Form.checkbox(
+            form,
+            field,
+            opts ++
+              [
+                class: "form-check-input",
+                id: AttributeHelper.id(form, field)
+              ]
+          ),
           label
         ]
       end
@@ -115,10 +131,10 @@ defmodule Bootform do
   @doc """
     Render a submit button
   """
-  @spec submit(String.t) :: {:safe, String.t}
+  @spec submit(String.t()) :: {:safe, String.t()}
   def submit(label) do
     Tag.content_tag :div, class: @wrapper_class do
-      Tag.content_tag :button, label, type: "submit", class: "btn btn-primary"
+      Tag.content_tag(:button, label, type: "submit", class: "btn btn-primary")
     end
   end
 
@@ -141,24 +157,34 @@ defmodule Bootform do
 
   defp wrap(form, field, label, opts, do: block) do
     id = AttributeHelper.id(form, field)
-    {opts, help} = if Errors.has_error?(form, field) do
-      {
-        opts ++ [class: @wrapper_class <> " " <> @error_class],
-        Tag.content_tag(:small, Errors.get_error(form, field), class: "invalid-feedback")
-      }
-    else
-      {
-        Keyword.put_new(opts, :class, @wrapper_class),
-        ""
-      }
-    end
-    Tag.content_tag(:div, opts) do
+
+    {opts, help} =
+      if Errors.has_error?(form, field) do
+        {
+          opts ++ [class: @wrapper_class <> " " <> @error_class],
+          Tag.content_tag(:small, Errors.get_error(form, field), class: "invalid-feedback")
+        }
+      else
+        {
+          Keyword.put_new(opts, :class, @wrapper_class),
+          ""
+        }
+      end
+
+    Tag.content_tag :div, opts do
       [
-        if label !== false do Tag.content_tag(:label, label, class: @label_class, for: id) else "" end,
+        if label !== false do
+          Tag.content_tag(:label, label, class: label_class(), for: id)
+        else
+          ""
+        end,
         block,
         help
       ]
     end
   end
 
+  defp label_class() do
+    Application.get_env(:bootform, :label_class) || "form-control-label"
+  end
 end
