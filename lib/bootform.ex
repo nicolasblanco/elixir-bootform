@@ -162,7 +162,9 @@ defmodule Bootform do
       if Errors.has_error?(form, field) do
         {
           opts ++ [class: @wrapper_class <> " " <> @error_class],
-          Tag.content_tag(:small, Errors.get_error(form, field), class: "invalid-feedback")
+          Tag.content_tag(error_content_tag(), Errors.get_error(form, field),
+            class: "invalid-feedback"
+          )
         }
       else
         {
@@ -182,6 +184,10 @@ defmodule Bootform do
         help
       ]
     end
+  end
+
+  defp error_content_tag() do
+    Application.get_env(:bootform, :error_content_tag) || :small
   end
 
   defp label_class() do
