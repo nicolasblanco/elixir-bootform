@@ -163,7 +163,8 @@ defmodule Bootform do
         {
           opts ++ [class: @wrapper_class <> " " <> @error_class],
           Tag.content_tag(error_content_tag(), Errors.get_error(form, field),
-            class: "invalid-feedback"
+            class: "invalid-feedback",
+            phx_feedback_for: Phoenix.HTML.Form.input_id(form, field)
           )
         }
       else

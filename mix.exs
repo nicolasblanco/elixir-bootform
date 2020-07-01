@@ -2,14 +2,16 @@ defmodule Bootform.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :bootform,
-     version: "0.1.2",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     description: description(),
-     package: package(),
-     deps: deps()]
+    [
+      app: :bootform,
+      version: "0.1.2",
+      elixir: "~> 1.3",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      description: description(),
+      package: package(),
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -30,7 +32,7 @@ defmodule Bootform.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:phoenix_html, "~> 2.7"},
+      {:phoenix_html, "~> 2.14"},
       {:phoenix, "~> 1.2"},
 
       # Docs
@@ -46,11 +48,15 @@ defmodule Bootform.Mixfile do
   end
 
   defp package do
-    [# These are the default files included in the package
-     name: :bootform,
-     maintainers: ["Jonathan Boyer"],
-     licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/Grafikart/elixir-bootform",
-              "Docs" => "https://hexdocs.pm/bootform/"}]
+    # These are the default files included in the package
+    [
+      name: :bootform,
+      maintainers: ["Jonathan Boyer"],
+      licenses: ["Apache 2.0"],
+      links: %{
+        "GitHub" => "https://github.com/Grafikart/elixir-bootform",
+        "Docs" => "https://hexdocs.pm/bootform/"
+      }
+    ]
   end
 end
