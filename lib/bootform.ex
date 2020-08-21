@@ -110,7 +110,9 @@ defmodule Bootform do
         _ -> @wrapper_checkbox_class
       end
 
-    Tag.content_tag :div, class: class do
+    id = AttributeHelper.id(form, field)
+
+    Tag.content_tag :div, class: class, phx_feedback_for: id do
       Tag.content_tag :label, class: "form-check-label" do
         [
           Form.checkbox(
@@ -119,7 +121,7 @@ defmodule Bootform do
             opts ++
               [
                 class: "form-check-input",
-                id: AttributeHelper.id(form, field)
+                id: id
               ]
           ),
           label
