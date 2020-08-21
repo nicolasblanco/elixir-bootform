@@ -163,7 +163,7 @@ defmodule Bootform do
     {opts, help} =
       if Errors.has_error?(form, field) do
         {
-          opts ++ [class: @wrapper_class <> " " <> @error_class],
+          opts ++ [class: @wrapper_class <> " " <> @error_class, phx_feedback_for: id],
           Tag.content_tag(error_content_tag(), Errors.get_error(form, field),
             class: "invalid-feedback",
             phx_feedback_for: id
