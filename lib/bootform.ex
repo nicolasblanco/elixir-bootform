@@ -67,6 +67,7 @@ defmodule Bootform do
         |> Keyword.delete(:options)
         |> Keyword.put_new(:id, id)
         |> Keyword.put_new(:class, input_class)
+        |> Keyword.put_new(:phx_feedback_for, id)
 
       case type do
         :email -> Form.email_input(form, field, opts)
