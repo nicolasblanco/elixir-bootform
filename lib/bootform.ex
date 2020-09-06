@@ -47,7 +47,7 @@ defmodule Bootform do
     id = AttributeHelper.id(form, field)
     options = Keyword.get(opts, :options)
 
-    wrap(form, field, label, []) do
+    wrap(form, field, label, label_class: Keyword.get(opts, :label_class)) do
       type =
         if options do
           :select
@@ -64,6 +64,7 @@ defmodule Bootform do
 
       opts =
         Keyword.delete(opts, :type)
+        |> Keyword.delete(:label_class)
         |> Keyword.delete(:options)
         |> Keyword.put_new(:id, id)
         |> Keyword.put_new(:class, input_class)
@@ -160,6 +161,8 @@ defmodule Bootform do
 
   defp wrap(form, field, label, opts, do: block) do
     id = AttributeHelper.id(form, field)
+    label_class = Keyword.get(opts, :label_class)
+    opts = Keyword.delete(opts, :label_class)
 
     {opts, help} =
       if Errors.has_error?(form, field) do
@@ -180,7 +183,7 @@ defmodule Bootform do
     Tag.content_tag :div, opts do
       [
         if label !== false do
-          Tag.content_tag(:label, label, class: label_class(), for: id)
+          Tag.content_tag(:label, label, class: label_class || label_class(), for: id)
         else
           ""
         end,
